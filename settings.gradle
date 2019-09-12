@@ -1,0 +1,2 @@
+include ':app', ':mekv', ':mekv-annotations', ':mekv-processor'
+rootProject.name='MeKV'
