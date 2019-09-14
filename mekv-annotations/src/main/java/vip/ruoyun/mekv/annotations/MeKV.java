@@ -16,4 +16,6 @@ import java.lang.annotation.Target;
 public @interface MeKV {
 
     String key() default "";
+
+    boolean isModel() default true;
 }

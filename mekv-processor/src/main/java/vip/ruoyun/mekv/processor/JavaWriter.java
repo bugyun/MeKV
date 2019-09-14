@@ -8,7 +8,13 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.tools.Diagnostic;
+import vip.ruoyun.mekv.annotations.Ignore;
 import vip.ruoyun.mekv.annotations.MeKV;
 
 /**
@@ -31,7 +37,191 @@ public class JavaWriter {
     private JavaWriter() {
     }
 
-    public static void write(ModelClass modelClass, Filer filer) {
+    public static void write(ModelClass modelClass, Filer filer, final Messager messager) {
+        MeKV meKV = modelClass.element.getAnnotation(MeKV.class);
+        if (meKV.isModel()) {
+            generateModel(modelClass, filer);
+        } else {//生成 key-value 形式
+            String value = meKV.key();
+            if (value.length() == 0) {
+                value = modelClass.element.toString() + SUFFIX;
+            }
+            //MeKV 相关的信息
+            ClassName meKVName = ClassName.get(MeKV_PACKAGE_NAME, MeKV_CLASS_NAME);
+            //java文件
+            TypeSpec.Builder helloWorld = TypeSpec.classBuilder(modelClass.className + SUFFIX)
+                    .addModifiers(Modifier.PUBLIC);
+
+            //key变量
+            FieldSpec key = FieldSpec.builder(String.class, KEY_NAME)
+                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                    .initializer("$S", value)
+                    .build();
+            helloWorld.addField(key);
+
+            //私有构造方法
+            MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
+                    .build();
+            helloWorld.addMethod(constructor);
+
+            //
+            for (VariableElement variableElement : modelClass.fields) {
+                Ignore ignore = variableElement.getAnnotation(Ignore.class);
+                if (ignore == null) {
+                    if (variableElement.asType().getKind().isPrimitive()) {//基本数据类型
+                        //get 方法
+                        MethodSpec getModel = MethodSpec
+                                .methodBuilder("get" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("return $T.getStrategy().decode$L($L+$S)",
+                                        meKVName,
+                                        Utils.captureName(variableElement.asType().toString()),
+                                        key.name,
+                                        "." + variableElement.getSimpleName())
+                                .returns(TypeName.get(variableElement.asType()))
+                                .build();
+                        helloWorld.addMethod(getModel);
+
+                        //save 方法
+                        MethodSpec saveModel = MethodSpec
+                                .methodBuilder("save" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addParameter(TypeName.get(variableElement.asType()), "value")
+                                .addStatement("$T.getStrategy().encode($L+$S,$L)", meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName(),
+                                        "value")
+                                .returns(TypeName.VOID)
+                                .build();
+                        helloWorld.addMethod(saveModel);
+                        //remove 方法
+                        MethodSpec remove = MethodSpec.methodBuilder(
+                                "remove" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("$T.getStrategy().remove($L+$S)", meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName())
+                                .returns(TypeName.VOID)
+                                .build();
+                        helloWorld.addMethod(remove);
+                    } else if (variableElement.asType().getKind() == TypeKind.ARRAY) {
+                        String function = "";
+                        if (variableElement.asType().toString().endsWith("Byte[]")) {
+                            function = "decodeBytes";
+                        }
+                        if (function.length() == 0) {
+                            return;
+                        }
+                        //get 方法
+                        MethodSpec getModel = MethodSpec
+                                .methodBuilder("get" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("return $T.getStrategy().$L($L+$S)",
+                                        meKVName,
+                                        function,
+                                        key.name,
+                                        "." + variableElement.getSimpleName())
+                                .returns(byte[].class)
+                                .build();
+                        helloWorld.addMethod(getModel);
+//
+                        //save 方法
+                        MethodSpec saveModel = MethodSpec
+                                .methodBuilder("save" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addParameter(TypeName.get(variableElement.asType()), "value")
+                                .addStatement("$T.getStrategy().encode($L+$S,$L)",
+                                        meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName(),
+                                        "value")
+                                .returns(TypeName.VOID)
+                                .build();
+                        helloWorld.addMethod(saveModel);
+                        //remove 方法
+                        MethodSpec remove = MethodSpec.methodBuilder(
+                                "remove" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("$T.getStrategy().remove($L+$S)", meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName())
+                                .returns(TypeName.VOID)
+                                .build();
+                        helloWorld.addMethod(remove);
+
+                    } else if (variableElement.asType().getKind() == TypeKind.DECLARED) {
+                        int lastIndexOf = variableElement.asType().toString().lastIndexOf(".");
+
+                        String packageName = variableElement.asType().toString().substring(0, lastIndexOf);
+                        String className = variableElement.asType().toString().substring(lastIndexOf + 1);
+
+                        messager.printMessage(Diagnostic.Kind.NOTE, packageName);
+                        messager.printMessage(Diagnostic.Kind.NOTE, className);
+
+                        //vip.ruoyun.mekv.demo.model.People
+                        messager.printMessage(Diagnostic.Kind.NOTE,
+                                variableElement.asType().toString().lastIndexOf(".") + "");
+
+                        //model 的类信息
+                        ClassName modelName = ClassName.get(packageName, className);
+                        //get 方法
+                        MethodSpec getModel = MethodSpec.methodBuilder("get" + className)
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("return ($L)$T.getStrategy().decode($L+$S,$L)", className,
+                                        meKVName, key.name,
+                                        "." + variableElement.getSimpleName(),
+                                        className + ".class")
+                                .returns(modelName)
+                                .build();
+                        helloWorld.addMethod(getModel);
+
+                        //save 方法
+                        MethodSpec saveModel = MethodSpec.methodBuilder("save" + className)
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addParameter(modelName, "model")
+                                .addStatement("$T.getStrategy().encode($L+$S,$L)",
+                                        meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName(),
+                                        "model")
+                                .returns(TypeName.VOID)
+                                .build();
+
+                        helloWorld.addMethod(saveModel);
+
+                        //remove 方法
+                        MethodSpec remove = MethodSpec.methodBuilder("remove" + className)
+                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addStatement("$T.getStrategy().remove($L+$S)",
+                                        meKVName,
+                                        key.name,
+                                        "." + variableElement.getSimpleName())
+                                .returns(TypeName.VOID)
+                                .build();
+
+                        helloWorld.addMethod(remove);
+
+                    }
+//                    messager.printMessage(Diagnostic.Kind.NOTE, variableElement.asType().getKind().toString());
+                }
+            }
+
+            for (ExecutableElement executableElement : modelClass.methods) {
+                messager.printMessage(Diagnostic.Kind.NOTE, executableElement.getSimpleName());
+            }
+
+            JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld.build())
+                    .build();
+            try {
+                javaFile.writeTo(filer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //生成 model 形式
+    private static void generateModel(ModelClass modelClass, Filer filer) {
         MeKV meKV = modelClass.element.getAnnotation(MeKV.class);
         String value = meKV.key();
         if (value.length() == 0) {
@@ -75,7 +265,7 @@ public class JavaWriter {
                 .build();
 
         //java文件
-        TypeSpec helloWorld = TypeSpec.classBuilder(modelClass.className + "MeKV")
+        TypeSpec helloWorld = TypeSpec.classBuilder(modelClass.className + SUFFIX)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(key)
                 .addMethod(constructor)

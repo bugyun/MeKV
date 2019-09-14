@@ -71,7 +71,7 @@ public class MeKVProcessor extends AbstractProcessor {
             }
         } else {  //生成文件
             for (ModelClass modelClass : providers) {
-                JavaWriter.write(modelClass, processingEnv.getFiler());
+                JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
             }
         }
         return true;
