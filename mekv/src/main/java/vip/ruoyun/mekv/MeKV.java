@@ -16,7 +16,7 @@ public class MeKV {
         private static final MeKV INSTANCE = new MeKV();
     }
 
-    public static MeKV getInstance() {
+    private static MeKV getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
@@ -27,10 +27,12 @@ public class MeKV {
     }
 
     public static void clear() {
-        getInstance().mMeKVStrategy.clear();
+        if (getInstance().mMeKVStrategy != null) {
+            getInstance().mMeKVStrategy.clear();
+        }
     }
 
-    public IMeKVStrategy getMeKVStrategy() {
-        return mMeKVStrategy;
+    public static IMeKVStrategy getStrategy() {
+        return getInstance().mMeKVStrategy;
     }
 }

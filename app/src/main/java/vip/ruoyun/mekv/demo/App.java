@@ -16,18 +16,5 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         MeKV.init(new MMKVStrategy(this));
-        //        MeKV.init(new GsonStrategy());
-        //
-        //
-        //        UserMeKV.changeStrategy(new GsonStrategy());
-        //        //单次操作
-        //        UserMeKV.saveName("");
-        //
-        //        //多次操作，先获取，在保存
-        //        User user = UserMeKV.getUser();
-        //        user.setAge(1);
-        //        user.setName("");
-        //        UserMeKV.setUser(user);
-
     }
 }
