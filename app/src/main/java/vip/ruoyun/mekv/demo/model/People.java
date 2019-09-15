@@ -1,12 +1,13 @@
 package vip.ruoyun.mekv.demo.model;
 
+import java.util.Set;
 import vip.ruoyun.mekv.annotations.MeKV;
 import vip.ruoyun.mekv.demo.User;
 
-@MeKV(isModel = true)
+@MeKV(isModel = false)
 public class People {
 
-//    @Ignore
+    //    @Ignore
     private String name;
 
     private boolean isOld;
@@ -20,6 +21,8 @@ public class People {
     private Byte[] mBytes;
 
     private User user;
+
+    private Set<String> setString;
 
 
 

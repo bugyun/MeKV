@@ -4,16 +4,15 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.io.IOException;
+import java.util.Set;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.tools.Diagnostic;
 import vip.ruoyun.mekv.annotations.Ignore;
 import vip.ruoyun.mekv.annotations.MeKV;
 
@@ -68,7 +67,8 @@ public class JavaWriter {
             for (VariableElement variableElement : modelClass.fields) {
                 Ignore ignore = variableElement.getAnnotation(Ignore.class);
                 if (ignore == null) {
-                    if (variableElement.asType().getKind().isPrimitive()) {//基本数据类型
+                    if (variableElement.asType().getKind().isPrimitive()) {
+                        //基本数据类型
                         //get 方法
                         MethodSpec getModel = MethodSpec
                                 .methodBuilder("get" + Utils.captureName(variableElement.getSimpleName().toString()))
@@ -124,7 +124,6 @@ public class JavaWriter {
                                 .returns(byte[].class)
                                 .build();
                         helloWorld.addMethod(getModel);
-//
                         //save 方法
                         MethodSpec saveModel = MethodSpec
                                 .methodBuilder("save" + Utils.captureName(variableElement.getSimpleName().toString()))
@@ -150,33 +149,72 @@ public class JavaWriter {
                         helloWorld.addMethod(remove);
 
                     } else if (variableElement.asType().getKind() == TypeKind.DECLARED) {
-                        int lastIndexOf = variableElement.asType().toString().lastIndexOf(".");
 
-                        String packageName = variableElement.asType().toString().substring(0, lastIndexOf);
-                        String className = variableElement.asType().toString().substring(lastIndexOf + 1);
+                        if (variableElement.asType().toString().endsWith(">")) {
+                            if (!variableElement.asType().toString().startsWith("java.util.Set")) {
+                                continue;
+                            }
+                        }
+//                        messager.printMessage(Diagnostic.Kind.NOTE,
+//                                "名称,,,," + variableElement.getSimpleName().toString());
+//
+//                        messager.printMessage(Diagnostic.Kind.NOTE,
+//                                "类型,,,," + variableElement.asType().getKind().toString());
+//
+//                        messager.printMessage(Diagnostic.Kind.NOTE,
+//                                "类型,,,," + variableElement.asType().toString());
 
-                        messager.printMessage(Diagnostic.Kind.NOTE, packageName);
-                        messager.printMessage(Diagnostic.Kind.NOTE, className);
+                        //java.lang.String
+                        //java.util.Set<java.lang.String>
+                        TypeName modelName;
+                        if (variableElement.asType().toString().endsWith("java.util.Set<java.lang.String>")) {
+                            modelName = ParameterizedTypeName.get(Set.class, String.class);
+                            //get 方法
+                            MethodSpec getModel = MethodSpec
+                                    .methodBuilder(
+                                            "get" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                    .addStatement("return $T.getStrategy().decodeStringSet($L+$S)",
+                                            meKVName,
+                                            key.name,
+                                            "." + variableElement.getSimpleName())
+                                    .returns(modelName)
+                                    .build();
+                            helloWorld.addMethod(getModel);
+                        } else {
+                            int lastIndexOf = variableElement.asType().toString().lastIndexOf(".");
 
-                        //vip.ruoyun.mekv.demo.model.People
-                        messager.printMessage(Diagnostic.Kind.NOTE,
-                                variableElement.asType().toString().lastIndexOf(".") + "");
+                            String packageName = variableElement.asType().toString().substring(0, lastIndexOf);
+                            String className = variableElement.asType().toString().substring(lastIndexOf + 1);
 
-                        //model 的类信息
-                        ClassName modelName = ClassName.get(packageName, className);
-                        //get 方法
-                        MethodSpec getModel = MethodSpec.methodBuilder("get" + className)
-                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                                .addStatement("return ($L)$T.getStrategy().decode($L+$S,$L)", className,
-                                        meKVName, key.name,
-                                        "." + variableElement.getSimpleName(),
-                                        className + ".class")
-                                .returns(modelName)
-                                .build();
-                        helloWorld.addMethod(getModel);
+//                            messager.printMessage(Diagnostic.Kind.NOTE, packageName);
+//                            messager.printMessage(Diagnostic.Kind.NOTE, className);
+
+                            //vip.ruoyun.mekv.demo.model.People
+//                            messager.printMessage(Diagnostic.Kind.NOTE,
+//                                    variableElement.asType().toString().lastIndexOf(".") + "");
+
+                            //model 的类信息
+                            modelName = ClassName.get(packageName, className);
+                            //get 方法
+                            MethodSpec getModel = MethodSpec
+                                    .methodBuilder(
+                                            "get" + Utils.captureName(variableElement.getSimpleName().toString()))
+                                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                    .addStatement("return ($L)$T.getStrategy().decode($L+$S,$L)",
+                                            className,
+                                            meKVName,
+                                            key.name,
+                                            "." + variableElement.getSimpleName(),
+                                            className + ".class")
+                                    .returns(modelName)
+                                    .build();
+                            helloWorld.addMethod(getModel);
+                        }
 
                         //save 方法
-                        MethodSpec saveModel = MethodSpec.methodBuilder("save" + className)
+                        MethodSpec saveModel = MethodSpec
+                                .methodBuilder("save" + Utils.captureName(variableElement.getSimpleName().toString()))
                                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                                 .addParameter(modelName, "model")
                                 .addStatement("$T.getStrategy().encode($L+$S,$L)",
@@ -190,7 +228,8 @@ public class JavaWriter {
                         helloWorld.addMethod(saveModel);
 
                         //remove 方法
-                        MethodSpec remove = MethodSpec.methodBuilder("remove" + className)
+                        MethodSpec remove = MethodSpec.methodBuilder(
+                                "remove" + Utils.captureName(variableElement.getSimpleName().toString()))
                                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                                 .addStatement("$T.getStrategy().remove($L+$S)",
                                         meKVName,
@@ -202,20 +241,20 @@ public class JavaWriter {
                         helloWorld.addMethod(remove);
 
                     }
-//                    messager.printMessage(Diagnostic.Kind.NOTE, variableElement.asType().getKind().toString());
+
                 }
             }
 
-            for (ExecutableElement executableElement : modelClass.methods) {
-                messager.printMessage(Diagnostic.Kind.NOTE, executableElement.getSimpleName());
-            }
+//            for (ExecutableElement executableElement : modelClass.methods) {
+//                messager.printMessage(Diagnostic.Kind.NOTE, executableElement.getSimpleName());
+//            }
 
             JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld.build())
                     .build();
             try {
                 javaFile.writeTo(filer);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+//                e.printStackTrace();
             }
         }
     }
@@ -278,8 +317,8 @@ public class JavaWriter {
                 .build();
         try {
             javaFile.writeTo(filer);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+//            e.printStackTrace();
         }
     }
 

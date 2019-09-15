@@ -3,6 +3,7 @@ package vip.ruoyun.mekv.demo;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.tencent.mmkv.MMKV;
+import vip.ruoyun.mekv.demo.model.PeopleMeKV;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         UserMeKV.saveUser(user);
         User user1 = MMKV.defaultMMKV().decodeParcelable("", User.class);
 
-//        PeopleMeKV.getPeople();
+        PeopleMeKV.getUser();
+//        PeopleMeKV.saveString();
 //        PeopleMeKV.saveUser(new User());
 
 //        StudentMeKV.getStudent();

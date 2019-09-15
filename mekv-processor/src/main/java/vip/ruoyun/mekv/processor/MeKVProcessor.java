@@ -68,18 +68,22 @@ public class MeKVProcessor extends AbstractProcessor {
                 modelClass.fields = fieldSet;
                 modelClass.methods = methodSet;
                 providers.add(modelClass);
+
             }
-        } else {  //生成文件
             for (ModelClass modelClass : providers) {
                 JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
             }
+        } else {  //生成文件
+//            for (ModelClass modelClass : providers) {
+//                JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
+//            }
         }
-        return true;
+        return false;
     }
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.RELEASE_8;
+        return SourceVersion.latest();
     }
 
     @Override
@@ -90,6 +94,8 @@ public class MeKVProcessor extends AbstractProcessor {
     }
 
     private void log(String message) {
-        messager.printMessage(Diagnostic.Kind.NOTE, message);
+        if (false) {
+            messager.printMessage(Diagnostic.Kind.NOTE, message);
+        }
     }
 }
