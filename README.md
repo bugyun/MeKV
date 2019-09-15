@@ -80,8 +80,9 @@ UserMeKV.remove();//清除
 - byte[]
 - ```Set<String>```
 - Parcelable
+- 不支持包装类型
 
-不支持包装类型
+设置 @MeKV(isModel = false) ,isModel 为 false
 
 ```java
 @MeKV(isModel = false)
