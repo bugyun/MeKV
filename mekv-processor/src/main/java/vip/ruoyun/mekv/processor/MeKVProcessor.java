@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -32,46 +33,51 @@ public class MeKVProcessor extends AbstractProcessor {
 
     private List<ModelClass> providers = new ArrayList<>();//model 集合
 
+    private AtomicBoolean once;
+
     @Override
     public synchronized void init(final ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         messager = processingEnvironment.getMessager();
         options = processingEnvironment.getOptions();//获取从外传进来的参数
+        once = new AtomicBoolean();
     }
 
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnvironment) {
         if (!roundEnvironment.processingOver()) { //处理注解
-            Set<? extends Element> elementSet = roundEnvironment.getElementsAnnotatedWith(MeKV.class);
-            for (Element element : elementSet) {//找到类
-                log(":::::" + element
-                        .getEnclosedElements());//这个类有哪些方法，User(),name,getName(),setName(java.lang.String)
-                ModelClass modelClass = new ModelClass();
-                modelClass.packageName = element.getEnclosingElement().toString();
-                modelClass.className = element.getSimpleName().toString();
-                modelClass.element = element;
-                Set<VariableElement> fieldSet = new HashSet<>();
-                Set<ExecutableElement> methodSet = new HashSet<>();
-                for (Element enclosedElement : element.getEnclosedElements()) {//找到属性
-                    if (enclosedElement instanceof VariableElement) {
-                        if (enclosedElement.getKind() == ElementKind.FIELD) {//属性
-                            fieldSet.add((VariableElement) enclosedElement);
+            if (once.compareAndSet(false, true)) {
+                Set<? extends Element> elementSet = roundEnvironment.getElementsAnnotatedWith(MeKV.class);
+                for (Element element : elementSet) {//找到类
+                    log(":::::" + element
+                            .getEnclosedElements());//这个类有哪些方法，User(),name,getName(),setName(java.lang.String)
+                    ModelClass modelClass = new ModelClass();
+                    modelClass.packageName = element.getEnclosingElement().toString();
+                    modelClass.className = element.getSimpleName().toString();
+                    modelClass.element = element;
+                    Set<VariableElement> fieldSet = new HashSet<>();
+                    Set<ExecutableElement> methodSet = new HashSet<>();
+                    for (Element enclosedElement : element.getEnclosedElements()) {//找到属性
+                        if (enclosedElement instanceof VariableElement) {
+                            if (enclosedElement.getKind() == ElementKind.FIELD) {//属性
+                                fieldSet.add((VariableElement) enclosedElement);
+                            }
                         }
-                    }
-                    if (enclosedElement instanceof ExecutableElement) {
-                        if (enclosedElement.getKind() == ElementKind.METHOD) {//属性
-                            methodSet.add((ExecutableElement) enclosedElement);
+                        if (enclosedElement instanceof ExecutableElement) {
+                            if (enclosedElement.getKind() == ElementKind.METHOD) {//属性
+                                methodSet.add((ExecutableElement) enclosedElement);
 //                            log(enclosedElement.getSimpleName().toString());
+                            }
                         }
                     }
-                }
-                modelClass.fields = fieldSet;
-                modelClass.methods = methodSet;
-                providers.add(modelClass);
+                    modelClass.fields = fieldSet;
+                    modelClass.methods = methodSet;
+                    providers.add(modelClass);
 
-            }
-            for (ModelClass modelClass : providers) {
-                JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
+                }
+                for (ModelClass modelClass : providers) {
+                    JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
+                }
             }
         } else {  //生成文件
 //            for (ModelClass modelClass : providers) {

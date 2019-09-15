@@ -110,7 +110,7 @@ public class JavaWriter {
                             function = "decodeBytes";
                         }
                         if (function.length() == 0) {
-                            return;
+                            continue;
                         }
                         //get 方法
                         MethodSpec getModel = MethodSpec
@@ -250,11 +250,12 @@ public class JavaWriter {
 //            }
 
             JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld.build())
+                    .addFileComment("Generated code from MeKV . Do not modify!")
                     .build();
             try {
                 javaFile.writeTo(filer);
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
@@ -311,14 +312,16 @@ public class JavaWriter {
                 .addMethod(getModel)
                 .addMethod(saveModel)
                 .addMethod(remove)
+
                 .build();
 
         JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld)
+                .addFileComment("Generated code from MeKV . Do not modify!")
                 .build();
         try {
             javaFile.writeTo(filer);
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
