@@ -117,8 +117,23 @@ MMKV mmkv = MMKV.defaultMMKV();
 MeKV.init(new MMKVStrategy(mmkv));
 ```
 
-MMKV 默认提供各种版本的 so文件
+### 去除不需要的 so 文件
+MMKV 默认提供各种版本的 so文件,可以进行配置
 
+![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685301150300.jpg?raw=true)
+
+
+```gradle
+android {
+    compileSdkVersion 28
+    minSdkVersion 16 //MMKV 要求最低版本
+    defaultConfig {
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+    }
+}
+```
 
 
 
