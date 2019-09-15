@@ -55,7 +55,7 @@ public class User implements Parcelable {
 ```
 生成的代码
 
-![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685305431100.jpg?raw=true)
+![-w1093](https://github.com/bugyun/MeKV/blob/936a77c485b1bb70c296096953495cf283ca562b/art/15685321019587.jpg?raw=true)
 
 
 使用
