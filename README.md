@@ -117,6 +117,9 @@ MMKV mmkv = MMKV.defaultMMKV();
 MeKV.init(new MMKVStrategy(mmkv));
 ```
 
+MMKV 默认提供各种版本的 so文件
+
+
 
 
 
