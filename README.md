@@ -2,11 +2,12 @@
 Key-value
 
 MeKV 是 Android  Key-Value 管理框架，为了解决 Android 平台下各种繁琐的配置类代码
+
 使用了 https://github.com/Tencent/MMKV 来存储数据,支持自定义存储数据
 
 ## 配置
 
-```
+```gradle
 dependencies {
     implementation 'vip.ruoyun.mekv:core:1.0.0'
     annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.0'
@@ -72,7 +73,7 @@ UserMeKV.saveUser(user);
 - long
 - int
 - byte[]
-- Set<String>
+- Set <String>
 - Parcelable
 
 不支持包装类型
