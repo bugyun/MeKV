@@ -1,5 +1,5 @@
 apply plugin: 'java-library'
-apply from: 'jcenter.gradle'//上传 jcenter 的插件
+//apply from: 'jcenter.gradle'//上传 jcenter 的插件
 
 
 dependencies {
