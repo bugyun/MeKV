@@ -26,14 +26,16 @@ public class MainActivity extends AppCompatActivity {
         user.setName("");
         user.getName();
         UserMeKV.saveUser(user);
+        UserMeKV.remove();
         User user1 = MMKV.defaultMMKV().decodeParcelable("", User.class);
 
 
-        PeopleMeKV.getName();
-        PeopleMeKV.getUser();
-        PeopleMeKV.saveUser(new User());
+        PeopleMeKV.saveName("value");//保存
+        PeopleMeKV.getName();//获取
+        PeopleMeKV.removeName();//删除对应的字段信息
 
         StudentMeKV.getName();
+//        MeKV.clear();//清除所有记录
 
     }
 }

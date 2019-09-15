@@ -60,12 +60,13 @@ public class User implements Parcelable {
 
 使用
 ```java
-User user = UserMeKV.getUser();
+User user = UserMeKV.getUser();//获取
 if (user != null) {
     user.setName("");
     user.getName();
 }
-UserMeKV.saveUser(user);
+UserMeKV.saveUser(user);//保存
+UserMeKV.remove();//清除
 ```
 
 ### key-value 模式
@@ -108,14 +109,20 @@ public class People {
 
 使用
 ```java
-PeopleMeKV.getName();
-PeopleMeKV.getUser();
-PeopleMeKV.saveUser(new User());
+PeopleMeKV.saveName("value");//保存
+PeopleMeKV.getName();//获取
+PeopleMeKV.removeName();//删除对应的字段信息
 ```
 
 生成的代码
 
 ![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685307213473.jpg?raw=true)
+
+## 清除所有记录
+
+```java
+MeKV.clear();//清除所有记录
+```
 
 ## 高级玩法
 #### 自定义 MMKV https://github.com/Tencent/MMKV/wiki/android_advance_cn
