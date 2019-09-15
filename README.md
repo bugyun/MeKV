@@ -132,7 +132,7 @@ MMKV 默认提供各种版本的 so文件,可以进行配置
 
 ```gradle
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     minSdkVersion 16 //MMKV 要求最低版本
     defaultConfig {
         ndk {
@@ -142,6 +142,9 @@ android {
 }
 ```
 
+#### 混淆相关
+
+内置混淆,不需要任何配置.
 
 
 
