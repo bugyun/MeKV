@@ -53,6 +53,9 @@ public class User implements Parcelable {
     ...
 }
 ```
+生成的代码
+![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685305431100.jpg?raw=true)
+
 
 使用
 ```java
@@ -109,19 +112,21 @@ PeopleMeKV.getUser();
 PeopleMeKV.saveUser(new User());
 ```
 
+生成的代码
+![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685307213473.jpg?raw=true)
+
 ## 高级玩法
-自定义 MMKV https://github.com/Tencent/MMKV/wiki/android_advance_cn
+#### 自定义 MMKV https://github.com/Tencent/MMKV/wiki/android_advance_cn
 ```java
 MMKV mmkv = MMKV.defaultMMKV();
 ...code//MMKV高级特性
 MeKV.init(new MMKVStrategy(mmkv));
 ```
 
-### 去除不需要的 so 文件
+#### 去除不需要的 so 文件
 MMKV 默认提供各种版本的 so文件,可以进行配置
 
 ![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685301150300.jpg?raw=true)
-
 
 ```gradle
 android {
@@ -134,6 +139,8 @@ android {
     }
 }
 ```
+
+
 
 
 
