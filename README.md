@@ -54,6 +54,7 @@ public class User implements Parcelable {
 }
 ```
 生成的代码
+
 ![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685305431100.jpg?raw=true)
 
 
@@ -113,6 +114,7 @@ PeopleMeKV.saveUser(new User());
 ```
 
 生成的代码
+
 ![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685307213473.jpg?raw=true)
 
 ## 高级玩法
