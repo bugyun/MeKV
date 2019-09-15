@@ -106,7 +106,7 @@ public class JavaWriter {
                         helloWorld.addMethod(remove);
                     } else if (variableElement.asType().getKind() == TypeKind.ARRAY) {
                         String function = "";
-                        if (variableElement.asType().toString().endsWith("Byte[]")) {
+                        if (variableElement.asType().toString().endsWith("byte[]")) {
                             function = "decodeBytes";
                         }
                         if (function.length() == 0) {

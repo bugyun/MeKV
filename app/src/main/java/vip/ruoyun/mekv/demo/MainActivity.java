@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
         UserMeKV.saveUser(user);
         User user1 = MMKV.defaultMMKV().decodeParcelable("", User.class);
 
-        PeopleMeKV.getPeople();
 
-//        PeopleMeKV.saveString();
-//        PeopleMeKV.saveUser(new User());
+        PeopleMeKV.getName();
+        PeopleMeKV.getUser();
+        PeopleMeKV.saveUser(new User());
 
         StudentMeKV.getName();
 

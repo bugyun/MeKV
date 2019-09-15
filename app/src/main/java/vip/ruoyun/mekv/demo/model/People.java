@@ -4,7 +4,7 @@ import java.util.Set;
 import vip.ruoyun.mekv.annotations.MeKV;
 import vip.ruoyun.mekv.demo.User;
 
-@MeKV()
+@MeKV(isModel = false)
 public class People {
 
     //    @Ignore
@@ -18,12 +18,9 @@ public class People {
 
     private long longMoney;
 
-    private Byte[] mBytes;
+    private byte[] mBytes;
 
     private User user;
 
     private Set<String> setString;
-
-
-
 }
