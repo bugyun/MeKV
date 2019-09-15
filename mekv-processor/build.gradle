@@ -1,4 +1,5 @@
 apply plugin: 'java-library'
+//apply from: 'jcenter.gradle'//上传 jcenter 的插件
 
 sourceCompatibility = "7"
 targetCompatibility = "7"
