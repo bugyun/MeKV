@@ -21,14 +21,12 @@ public class MainActivity extends AppCompatActivity {
         //多次操作，先获取，在保存
         User user = UserMeKV.getUser();
         if (user != null) {
-
+            user.setName("");
+            user.getName();
+            UserMeKV.saveUser(user);
         }
-        user.setName("");
-        user.getName();
-        UserMeKV.saveUser(user);
         UserMeKV.remove();
         User user1 = MMKV.defaultMMKV().decodeParcelable("", User.class);
-
 
         PeopleMeKV.saveName("value");//保存
         PeopleMeKV.getName();//获取

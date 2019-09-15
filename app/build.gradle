@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
     defaultConfig {
         applicationId "vip.ruoyun.mekv.demo"
         minSdkVersion 16
@@ -10,11 +11,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-//                arguments[argumentIncremental] = 'true'
-            }
-        }
     }
     buildTypes {
         release {
@@ -22,15 +18,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+        disable 'TypographyFractions','TypographyQuotes'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+//    implementation 'vip.ruoyun.mekv:mekv-core:1.0.0'
+//    implementation 'vip.ruoyun.mekv:mekv-annotation:1.0.0'
+//    annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.0'
 
     implementation project(path: ':mekv')
     annotationProcessor project(path: ':mekv-processor')

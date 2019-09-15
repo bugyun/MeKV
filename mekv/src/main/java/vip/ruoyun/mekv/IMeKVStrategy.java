@@ -15,9 +15,8 @@ public interface IMeKVStrategy<E> {
      *
      * @param key key
      * @param src 要保存的 bean
-     * @param <T> 传入字符的泛型
      */
-    <T extends E> boolean encode(String key, T src);
+    boolean encode(String key, E src);
 
     /**
      * 解码

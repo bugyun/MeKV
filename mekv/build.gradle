@@ -20,14 +20,18 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
     api 'com.tencent:mmkv:1.0.23'
-    api project(path: ':mekv-annotations')
+    api 'vip.ruoyun.mekv:mekv-annotation:1.0.0'
 }

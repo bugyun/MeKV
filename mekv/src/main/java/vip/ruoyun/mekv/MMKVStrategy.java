@@ -26,7 +26,7 @@ public class MMKVStrategy implements IMeKVStrategy<Parcelable> {
 
 
     @Override
-    public <T extends Parcelable> boolean encode(final String key, final T src) {
+    public boolean encode(final String key, final Parcelable src) {
         return mmkv.encode(key, src);
     }
 
