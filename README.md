@@ -54,7 +54,7 @@ public class User implements Parcelable {
 }
 ```
 生成的代码
-![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685305431100.jpg?raw=true)
+![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685305431100.jpg?raw=true)
 
 
 使用
@@ -113,7 +113,7 @@ PeopleMeKV.saveUser(new User());
 ```
 
 生成的代码
-![-w1093](https://github.com/bugyun/MeKV/blob/613362cb49656866f957d09d2cadc4de97326bfa/art/15685307213473.jpg?raw=true)
+![-w1093](https://github.com/bugyun/MeKV/blob/faa4cf16786f2a28963ff7a43fb674ae40535cd1/art/15685307213473.jpg?raw=true)
 
 ## 高级玩法
 #### 自定义 MMKV https://github.com/Tencent/MMKV/wiki/android_advance_cn
