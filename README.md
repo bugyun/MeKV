@@ -14,8 +14,8 @@ MeKV 是 Android  Key-Value 管理框架，为了解决 Android 平台下各种�
 
 ```gradle
 dependencies {
-    implementation 'vip.ruoyun.mekv:mekv-core:1.0.0'
-    annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.0'
+    implementation 'vip.ruoyun.mekv:mekv-core:1.0.1'
+    annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.1'
 }
 ```
 
