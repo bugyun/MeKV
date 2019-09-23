@@ -13,7 +13,7 @@ import vip.ruoyun.mekv.annotations.MeKV;
 @MeKV
 public class User implements Parcelable {
 
-//    @Ignore
+    //    @Ignore
     private String name;
 
     public String getName() {

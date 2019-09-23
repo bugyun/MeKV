@@ -24,7 +24,7 @@ import vip.ruoyun.mekv.annotations.MeKV;
  */
 public class JavaWriter {
 
-    private static final String SUFFIX = "MeKV";//后缀
+    private static String SUFFIX = "MeKV";//后缀
 
     private static final String KEY_NAME = "KEY";//key 值名称
 
@@ -38,6 +38,14 @@ public class JavaWriter {
 
     public static void write(ModelClass modelClass, Filer filer, final Messager messager) {
         MeKV meKV = modelClass.element.getAnnotation(MeKV.class);
+
+        String suffixValue = meKV.suffix();
+        if (suffixValue.length() > 0) {
+            SUFFIX = suffixValue;
+        } else {
+            SUFFIX = "MeKV";
+        }
+
         if (meKV.isModel()) {
             generateModel(modelClass, filer);
         } else {//生成 key-value 形式

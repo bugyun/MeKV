@@ -15,6 +15,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface MeKV {
 
+    /**
+     * 自定义后缀
+     */
+    String suffix() default "";
+
     String key() default "";
 
     boolean isModel() default true;

@@ -6,6 +6,8 @@ targetCompatibility = "7"
 
 dependencies {
     implementation 'com.squareup:javapoet:1.11.1'
-    implementation 'vip.ruoyun.mekv:mekv-annotation:1.0.0'
+//    implementation 'vip.ruoyun.mekv:mekv-annotation:1.0.0'
+    implementation project(path: ':mekv-annotations')
+
 }
 
