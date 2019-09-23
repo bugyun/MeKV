@@ -35,7 +35,7 @@ MeKV.init(new MMKVStrategy(this));
 - Parcelable
 
 ```java
-@MeKV //model 默认为 true
+@MeKV(model = true) //model 默认为 true
 public class User implements Parcelable {
     private String name;
 
