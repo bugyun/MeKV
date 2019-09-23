@@ -124,6 +124,17 @@ PeopleMeKV.removeName();//删除对应的字段信息
 MeKV.clear();//清除所有记录
 ```
 
+## 自定义后缀
+默认为 MeKV 后缀。
+```java
+@MeKV(suffix = "Manger")
+public class People {
+....
+}
+//生成类
+PeopleManager
+```
+
 ## 高级玩法
 #### 自定义 MMKV https://github.com/Tencent/MMKV/wiki/android_advance_cn
 ```java
