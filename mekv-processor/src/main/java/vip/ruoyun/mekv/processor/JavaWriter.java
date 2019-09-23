@@ -46,7 +46,7 @@ public class JavaWriter {
             SUFFIX = "MeKV";
         }
 
-        if (meKV.isModel()) {
+        if (meKV.model()) {
             generateModel(modelClass, filer);
         } else {//生成 key-value 形式
             String value = meKV.key();

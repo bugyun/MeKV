@@ -35,7 +35,7 @@ MeKV.init(new MMKVStrategy(this));
 - Parcelable
 
 ```java
-@MeKV
+@MeKV //model 默认为 true
 public class User implements Parcelable {
     private String name;
 
@@ -80,10 +80,10 @@ UserMeKV.remove();//清除
 - Parcelable
 - 不支持包装类型
 
-设置 @MeKV(isModel = false) ,isModel 为 false
+设置 @MeKV(model = false) ,model 为 false
 
 ```java
-@MeKV(isModel = false)
+@MeKV(model = false)
 public class People {
     //不需要 get/set 方法
 

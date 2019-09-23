@@ -4,7 +4,7 @@ import java.util.Set;
 import vip.ruoyun.mekv.annotations.MeKV;
 import vip.ruoyun.mekv.demo.User;
 
-@MeKV(isModel = false)
+@MeKV(model = false)
 public class People {
 
     //    @Ignore

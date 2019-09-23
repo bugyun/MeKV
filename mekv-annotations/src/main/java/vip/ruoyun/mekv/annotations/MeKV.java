@@ -22,5 +22,5 @@ public @interface MeKV {
 
     String key() default "";
 
-    boolean isModel() default true;
+    boolean model() default true;
 }
