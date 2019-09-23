@@ -3,7 +3,6 @@ package vip.ruoyun.mekv.processor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.processing.AbstractProcessor;
@@ -29,8 +28,6 @@ public class MeKVProcessor extends AbstractProcessor {
 
     private Messager messager; // 日志相关的辅助类,Log 日志
 
-    private Map<String, String> options;//传进来的参数
-
     private List<ModelClass> providers = new ArrayList<>();//model 集合
 
     private AtomicBoolean once;
@@ -39,7 +36,6 @@ public class MeKVProcessor extends AbstractProcessor {
     public synchronized void init(final ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         messager = processingEnvironment.getMessager();
-        options = processingEnvironment.getOptions();//获取从外传进来的参数
         once = new AtomicBoolean();
     }
 
@@ -79,10 +75,6 @@ public class MeKVProcessor extends AbstractProcessor {
                     JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
                 }
             }
-        } else {  //生成文件
-//            for (ModelClass modelClass : providers) {
-//                JavaWriter.write(modelClass, processingEnv.getFiler(), messager);
-//            }
         }
         return false;
     }
