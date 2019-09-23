@@ -51,13 +51,6 @@ public class User implements Parcelable {
 }
 ```
 
-自定义 key
-```java
-@MeKV(key = "CustomKeyUserKey")
-public class User implements Parcelable {
-    ...
-}
-```
 生成的代码
 
 ![-w1093](https://github.com/bugyun/MeKV/blob/936a77c485b1bb70c296096953495cf283ca562b/art/15685321019587.jpg?raw=true)
@@ -128,6 +121,15 @@ PeopleMeKV.removeName();//删除对应的字段信息
 
 ```java
 MeKV.clear();//清除所有记录
+```
+
+## 自定义 key
+默认为包名+生成的类名。
+```java
+@MeKV(key = "CustomKeyUserKey")
+public class User implements Parcelable {
+    ...
+}
 ```
 
 ## 自定义后缀
