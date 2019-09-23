@@ -46,7 +46,7 @@ public class JavaWriter {
             SUFFIX = "MeKV";
         }
 
-        if (meKV.isModel()) {
+        if (meKV.model()) {
             generateModel(modelClass, filer);
         } else {//生成 key-value 形式
             String value = meKV.key();
@@ -56,7 +56,7 @@ public class JavaWriter {
             //MeKV 相关的信息
             ClassName meKVName = ClassName.get(MeKV_PACKAGE_NAME, MeKV_CLASS_NAME);
             //java文件
-            TypeSpec.Builder helloWorld = TypeSpec.classBuilder(modelClass.className + SUFFIX)
+            TypeSpec.Builder javaCode = TypeSpec.classBuilder(modelClass.className + SUFFIX)
                     .addModifiers(Modifier.PUBLIC);
 
             //key变量
@@ -64,12 +64,12 @@ public class JavaWriter {
                     .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
                     .initializer("$S", value)
                     .build();
-            helloWorld.addField(key);
+            javaCode.addField(key);
 
             //私有构造方法
             MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE)
                     .build();
-            helloWorld.addMethod(constructor);
+            javaCode.addMethod(constructor);
 
             //
             for (VariableElement variableElement : modelClass.fields) {
@@ -88,7 +88,7 @@ public class JavaWriter {
                                         "." + variableElement.getSimpleName())
                                 .returns(TypeName.get(variableElement.asType()))
                                 .build();
-                        helloWorld.addMethod(getModel);
+                        javaCode.addMethod(getModel);
 
                         //save 方法
                         MethodSpec saveModel = MethodSpec
@@ -101,7 +101,7 @@ public class JavaWriter {
                                         "value")
                                 .returns(TypeName.VOID)
                                 .build();
-                        helloWorld.addMethod(saveModel);
+                        javaCode.addMethod(saveModel);
                         //remove 方法
                         MethodSpec remove = MethodSpec.methodBuilder(
                                 "remove" + Utils.captureName(variableElement.getSimpleName().toString()))
@@ -111,7 +111,7 @@ public class JavaWriter {
                                         "." + variableElement.getSimpleName())
                                 .returns(TypeName.VOID)
                                 .build();
-                        helloWorld.addMethod(remove);
+                        javaCode.addMethod(remove);
                     } else if (variableElement.asType().getKind() == TypeKind.ARRAY) {
                         String function = "";
                         if (variableElement.asType().toString().endsWith("byte[]")) {
@@ -131,7 +131,7 @@ public class JavaWriter {
                                         "." + variableElement.getSimpleName())
                                 .returns(byte[].class)
                                 .build();
-                        helloWorld.addMethod(getModel);
+                        javaCode.addMethod(getModel);
                         //save 方法
                         MethodSpec saveModel = MethodSpec
                                 .methodBuilder("save" + Utils.captureName(variableElement.getSimpleName().toString()))
@@ -144,7 +144,7 @@ public class JavaWriter {
                                         "value")
                                 .returns(TypeName.VOID)
                                 .build();
-                        helloWorld.addMethod(saveModel);
+                        javaCode.addMethod(saveModel);
                         //remove 方法
                         MethodSpec remove = MethodSpec.methodBuilder(
                                 "remove" + Utils.captureName(variableElement.getSimpleName().toString()))
@@ -154,7 +154,7 @@ public class JavaWriter {
                                         "." + variableElement.getSimpleName())
                                 .returns(TypeName.VOID)
                                 .build();
-                        helloWorld.addMethod(remove);
+                        javaCode.addMethod(remove);
 
                     } else if (variableElement.asType().getKind() == TypeKind.DECLARED) {
 
@@ -188,7 +188,7 @@ public class JavaWriter {
                                             "." + variableElement.getSimpleName())
                                     .returns(modelName)
                                     .build();
-                            helloWorld.addMethod(getModel);
+                            javaCode.addMethod(getModel);
                         } else {
                             int lastIndexOf = variableElement.asType().toString().lastIndexOf(".");
 
@@ -217,7 +217,7 @@ public class JavaWriter {
                                             className + ".class")
                                     .returns(modelName)
                                     .build();
-                            helloWorld.addMethod(getModel);
+                            javaCode.addMethod(getModel);
                         }
 
                         //save 方法
@@ -233,7 +233,7 @@ public class JavaWriter {
                                 .returns(TypeName.VOID)
                                 .build();
 
-                        helloWorld.addMethod(saveModel);
+                        javaCode.addMethod(saveModel);
 
                         //remove 方法
                         MethodSpec remove = MethodSpec.methodBuilder(
@@ -246,10 +246,9 @@ public class JavaWriter {
                                 .returns(TypeName.VOID)
                                 .build();
 
-                        helloWorld.addMethod(remove);
+                        javaCode.addMethod(remove);
 
                     }
-
                 }
             }
 
@@ -257,7 +256,7 @@ public class JavaWriter {
 //                messager.printMessage(Diagnostic.Kind.NOTE, executableElement.getSimpleName());
 //            }
 
-            JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld.build())
+            JavaFile javaFile = JavaFile.builder(modelClass.packageName, javaCode.build())
                     .addFileComment("Generated code from MeKV . Do not modify!")
                     .build();
             try {
@@ -313,7 +312,7 @@ public class JavaWriter {
                 .build();
 
         //java文件
-        TypeSpec helloWorld = TypeSpec.classBuilder(modelClass.className + SUFFIX)
+        TypeSpec javaCode = TypeSpec.classBuilder(modelClass.className + SUFFIX)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(key)
                 .addMethod(constructor)
@@ -323,7 +322,7 @@ public class JavaWriter {
 
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(modelClass.packageName, helloWorld)
+        JavaFile javaFile = JavaFile.builder(modelClass.packageName, javaCode)
                 .addFileComment("Generated code from MeKV . Do not modify!")
                 .build();
         try {

@@ -12,7 +12,7 @@ publish {
     userOrg = 'bugyun'        //bintray.com用户名
     groupId = 'vip.ruoyun.mekv'    //jcenter group
     artifactId = 'mekv-compiler'   //项目名称 name
-    publishVersion = '1.0.0'//版本号 version
+    publishVersion = '1.0.1'//版本号 version
     desc = 'Android Key-Value 管理框架 注解器'//描述
     website = 'https://github.com/bugyun/MeKV' // github 网址
 }

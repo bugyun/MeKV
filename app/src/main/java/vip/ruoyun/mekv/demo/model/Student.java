@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import vip.ruoyun.mekv.annotations.MeKV;
 
-@MeKV(key = "你好", isModel = false)
+@MeKV(key = "你好", model = false)
 public class Student implements Parcelable {
 
 

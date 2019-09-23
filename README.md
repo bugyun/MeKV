@@ -4,12 +4,18 @@ MeKV 是 Android  Key-Value 管理框架，为了解决 Android 平台下各种�
 
 使用了 https://github.com/Tencent/MMKV 来存储数据,支持自定义存储数据
 
+
+## 特点
+- 不用写 get/set
+- 自动生成代码
+- 可以自定义后缀
+
 ## 配置
 
 ```gradle
 dependencies {
-    implementation 'vip.ruoyun.mekv:mekv-core:1.0.0'
-    annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.0'
+    implementation 'vip.ruoyun.mekv:mekv-core:1.0.1'
+    annotationProcessor 'vip.ruoyun.mekv:mekv-compiler:1.0.1'
 }
 ```
 
@@ -29,7 +35,7 @@ MeKV.init(new MMKVStrategy(this));
 - Parcelable
 
 ```java
-@MeKV
+@MeKV(model = true) //model 默认为 true
 public class User implements Parcelable {
     private String name;
 
@@ -45,13 +51,6 @@ public class User implements Parcelable {
 }
 ```
 
-自定义 key
-```java
-@MeKV(key = "CustomKeyUserKey")
-public class User implements Parcelable {
-    ...
-}
-```
 生成的代码
 
 ![-w1093](https://github.com/bugyun/MeKV/blob/936a77c485b1bb70c296096953495cf283ca562b/art/15685321019587.jpg?raw=true)
@@ -81,10 +80,10 @@ UserMeKV.remove();//清除
 - Parcelable
 - 不支持包装类型
 
-设置 @MeKV(isModel = false) ,isModel 为 false
+设置 @MeKV(model = false) ,model 为 false
 
 ```java
-@MeKV(isModel = false)
+@MeKV(model = false)
 public class People {
     //不需要 get/set 方法
 
@@ -122,6 +121,26 @@ PeopleMeKV.removeName();//删除对应的字段信息
 
 ```java
 MeKV.clear();//清除所有记录
+```
+
+## 自定义 key
+默认为包名+生成的类名。
+```java
+@MeKV(key = "CustomKeyUserKey")
+public class User implements Parcelable {
+    ...
+}
+```
+
+## 自定义后缀
+默认为 MeKV 后缀。
+```java
+@MeKV(suffix = "Manger")
+public class People {
+....
+}
+//生成类
+PeopleManager
 ```
 
 ## 高级玩法
