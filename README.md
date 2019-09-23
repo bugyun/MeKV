@@ -4,6 +4,12 @@ MeKV 是 Android  Key-Value 管理框架，为了解决 Android 平台下各种�
 
 使用了 https://github.com/Tencent/MMKV 来存储数据,支持自定义存储数据
 
+
+## 特点
+- 不用写 get/set
+- 自动生成代码
+- 可以自定义后缀
+
 ## 配置
 
 ```gradle
